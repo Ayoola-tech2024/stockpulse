@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = ""
+client_id = "dacfce9e94152c678e4c4ef2f87e3d4e"
 name = "StockPulse"
 application_url = "https://stockpulse.dev"
 embedded = true
