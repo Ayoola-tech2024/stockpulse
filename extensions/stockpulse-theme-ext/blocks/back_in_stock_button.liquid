@@ -1,0 +1,168 @@
+{% comment %}
+  StockPulse Online Store 2.0 Back-in-Stock Waitlist Block
+  Renders when the selected product variant is out of stock (variant.available == false)
+  and dynamically toggles on variant selection changes.
+{% endcomment %}
+
+{% if product %}
+  {% assign current_variant = product.selected_or_first_available_variant %}
+
+  {{ 'stockpulse-widget.css' | asset_url | stylesheet_tag }}
+
+  <div
+    class="stockpulse-root"
+    data-stockpulse-root
+    data-shop="{{ shop.permanent_domain | escape }}"
+    data-product-id="{{ product.id }}"
+    data-variant-id="{{ current_variant.id }}"
+    data-product-title="{{ product.title | escape }}"
+    data-product-handle="{{ product.handle | escape }}"
+    data-display-mode="{{ block.settings.display_mode | default: 'inline' }}"
+    data-endpoint="/apps/stockpulse/api/subscribe"
+    data-settings-endpoint="/apps/stockpulse/api/settings"
+    data-submitting-text="{{ 'stockpulse.submitting' | t }}"
+    data-success-text="{{ 'stockpulse.success' | t }}"
+    data-invalid-email="{{ 'stockpulse.invalid_email' | t }}"
+    data-error-text="{{ 'stockpulse.generic_error' | t }}"
+    style="--sp-btn-bg: {{ block.settings.button_color | default: '#008060' }}; --sp-btn-fg: {{ block.settings.button_text_color | default: '#ffffff' }};"
+    {% if current_variant.available %}hidden{% endif %}
+    {{ block.shopify_attributes }}
+  >
+    <script type="application/json" data-stockpulse-variants>
+      [
+        {% for v in product.variants %}
+          {
+            "id": {{ v.id | json }},
+            "title": {{ v.title | json }},
+            "available": {{ v.available | json }},
+            "price": {{ v.price | divided_by: 100.0 | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    </script>
+
+    {% if block.settings.display_mode == 'modal' %}
+      <button
+        type="button"
+        class="stockpulse-btn"
+        data-sp-modal-open
+      >
+        {{ block.settings.button_text | default: 'Notify Me When Available' | escape }}
+      </button>
+
+      <div class="stockpulse-modal-backdrop" data-sp-modal-backdrop hidden>
+        <div class="stockpulse-modal" role="dialog" aria-modal="true" aria-label="{{ block.settings.heading_text | escape }}">
+          <button type="button" class="stockpulse-modal-close" data-sp-modal-close aria-label="Close">&times;</button>
+          <p class="stockpulse-heading">
+            {{ block.settings.heading_text | default: 'Out of stock? Get notified the moment it restocks.' | escape }}
+          </p>
+          <p
+            class="stockpulse-variant-label"
+            data-sp-variant-title
+            {% if current_variant.title == 'Default Title' %}hidden{% endif %}
+          >
+            {% unless current_variant.title == 'Default Title' %}
+              Variant: {{ current_variant.title | escape }}
+            {% endunless %}
+          </p>
+          <form class="stockpulse-form-row" data-sp-form novalidate>
+            <input
+              type="email"
+              class="stockpulse-input"
+              data-sp-email
+              required
+              autocomplete="email"
+              placeholder="{{ block.settings.email_placeholder | default: 'Enter your email address' | escape }}"
+              aria-label="Email address"
+            />
+            <button type="submit" class="stockpulse-btn" data-sp-submit>
+              {{ block.settings.button_text | default: 'Notify Me When Available' | escape }}
+            </button>
+          </form>
+          <p class="stockpulse-feedback" data-sp-feedback aria-live="polite"></p>
+        </div>
+      </div>
+    {% else %}
+      <div class="stockpulse-card">
+        <p class="stockpulse-heading">
+          {{ block.settings.heading_text | default: 'Out of stock? Get notified the moment it restocks.' | escape }}
+        </p>
+        <p
+          class="stockpulse-variant-label"
+          data-sp-variant-title
+          {% if current_variant.title == 'Default Title' %}hidden{% endif %}
+        >
+          {% unless current_variant.title == 'Default Title' %}
+            Variant: {{ current_variant.title | escape }}
+          {% endunless %}
+        </p>
+        <form class="stockpulse-form-row" data-sp-form novalidate>
+          <input
+            type="email"
+            class="stockpulse-input"
+            data-sp-email
+            required
+            autocomplete="email"
+            placeholder="{{ block.settings.email_placeholder | default: 'Enter your email address' | escape }}"
+            aria-label="Email address"
+          />
+          <button type="submit" class="stockpulse-btn" data-sp-submit>
+            {{ block.settings.button_text | default: 'Notify Me When Available' | escape }}
+          </button>
+        </form>
+        <p class="stockpulse-feedback" data-sp-feedback aria-live="polite"></p>
+      </div>
+    {% endif %}
+  </div>
+
+  <script src="{{ 'stockpulse-widget.js' | asset_url }}" defer></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "StockPulse Notify Me",
+  "target": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "display_mode",
+      "label": "Display mode",
+      "options": [
+        { "value": "inline", "label": "Inline form" },
+        { "value": "modal", "label": "Button + Modal popup" }
+      ],
+      "default": "inline"
+    },
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading text",
+      "default": "Out of stock? Get notified the moment it restocks."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Notify Me When Available"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button background color",
+      "default": "#008060"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,130 @@
+.stockpulse-root {
+  margin: 16px 0;
+  font-family: inherit;
+}
+
+.stockpulse-root[hidden] {
+  display: none !important;
+}
+
+.stockpulse-card {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 16px;
+  background: #ffffff;
+}
+
+.stockpulse-heading {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1a1a1a;
+}
+
+.stockpulse-variant-label {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  color: #616161;
+}
+
+.stockpulse-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stockpulse-input {
+  flex: 1 1 180px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #c9cccf;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+.stockpulse-input:focus {
+  outline: 2px solid #005bd3;
+  outline-offset: 1px;
+}
+
+.stockpulse-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  background-color: var(--sp-btn-bg, #008060);
+  color: var(--sp-btn-fg, #ffffff);
+  transition: opacity 0.15s ease;
+}
+
+.stockpulse-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.stockpulse-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stockpulse-feedback {
+  margin: 10px 0 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.stockpulse-feedback--success {
+  color: #006e52;
+  font-weight: 500;
+}
+
+.stockpulse-feedback--error {
+  color: #b71c1c;
+}
+
+.stockpulse-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.stockpulse-modal-backdrop[hidden] {
+  display: none !important;
+}
+
+.stockpulse-modal {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.stockpulse-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+  color: #616161;
+  cursor: pointer;
+  padding: 4px 8px;
+}

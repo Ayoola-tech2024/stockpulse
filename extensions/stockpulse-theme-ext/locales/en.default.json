@@ -1,0 +1,11 @@
+{
+  "stockpulse": {
+    "default_button_text": "Notify Me When Available",
+    "default_heading": "Out of stock? Get notified the moment it restocks.",
+    "default_placeholder": "Enter your email address",
+    "submitting": "Joining waitlist...",
+    "success": "We'll notify you the moment it restocks!",
+    "invalid_email": "Please enter a valid email address.",
+    "generic_error": "Something went wrong. Please try again."
+  }
+}
