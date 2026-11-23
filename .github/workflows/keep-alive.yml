@@ -15,5 +15,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
-          psql "$DATABASE_URL" -c "SELECT count(*) FROM \"Session\";"
+          # Strip pgbouncer query parameter which psql does not recognize
+          CLEAN_URL=$(echo "$DATABASE_URL" | sed 's/[?&]pgbouncer=true//g')
+          psql "$CLEAN_URL" -c "SELECT count(*) FROM \"Session\";"
           echo "Supabase successfully pinged at $(date -u)"
