@@ -4,37 +4,16 @@ on:
   schedule:
     # Runs every 3 days at 00:00 UTC (well within Supabase's 7-day auto-pause limit)
     - cron: '0 0 */3 * *'
-  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
   keep-alive:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install prisma @prisma/client
-
-      - name: Generate Prisma Client
-        run: npx prisma generate
-
-      - name: Ping Supabase Database
+      - name: Ping Supabase PostgreSQL via psql
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          node -e "
-            const { PrismaClient } = require('@prisma/client');
-            const prisma = new PrismaClient();
-            async function ping() {
-              const count = await prisma.session.count();
-              console.log('Supabase Ping Success! Session count:', count, 'Timestamp:', new Date().toISOString());
-            }
-            ping()
-              .catch(err => { console.error('Ping failed:', err); process.exit(1); })
-              .finally(() => prisma.\$disconnect());
-          "
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+          psql "$DATABASE_URL" -c "SELECT count(*) FROM \"Session\";"
+          echo "Supabase successfully pinged at $(date -u)"
